@@ -1,0 +1,125 @@
+STOP using generic SaaS design patterns.
+
+The current implementation does not match the StoryStudio vision.
+
+I want a complete redesign focused on emotional atmosphere and immersion.
+
+StoryStudio should feel like a premium creative operating system for authors.
+
+Remove:
+- Generic SaaS grids
+- Generic floating rectangles
+- Generic placeholder cards
+- Empty black backgrounds
+
+Add the following EXACT features:
+
+1. CUSTOM FEATHER CURSOR
+- Replace the default cursor with a feather pen
+- Add a subtle animated ink trail
+- Hovering interactive elements creates tiny ink particles
+- Clicking creates a soft ink ripple
+
+2. LIVING MANUSCRIPT BACKGROUND
+- Floating manuscript pages with ACTUAL story text visible
+- Pages slowly drift and rotate
+- Some pages contain lore notes
+- Some contain character sketches
+- Some contain worldbuilding notes
+- Some contain chapter excerpts
+
+3. WRITER'S DESK ATMOSPHERE
+- Very subtle parchment textures
+- Ink stains
+- Paper grain
+- Old notebook elements
+- Soft shadows
+
+4. WORLDBUILDING VISUALS
+- Low-opacity fantasy maps
+- Character profile sketches
+- Relationship diagrams
+- Story flowcharts
+- Kingdom maps
+- Timeline fragments
+
+All integrated into the background.
+
+5. ANIMATED STORY ELEMENTS
+- Ink lines draw themselves
+- Story nodes connect while scrolling
+- Lore fragments fade in and out
+- Character cards assemble themselves
+- Manuscript pages turn slowly
+
+6. HERO SECTION REDESIGN
+
+Instead of generic text:
+
+Create a visual storytelling centerpiece.
+
+Show:
+- Book creation process
+- Character network
+- World map
+- Lore database
+- Manuscript editor
+
+connected together visually.
+
+The user should immediately understand:
+
+"I can build an entire fictional universe here."
+
+7. AUTHENTICATION REDESIGN
+
+The left side of Sign In and Sign Up should feel alive.
+
+Include:
+- Floating pages
+- Quotes from fictional books
+- Character notes
+- Worldbuilding fragments
+- Animated manuscript papers
+
+No empty space.
+
+8. PREMIUM ANIMATIONS
+
+Use Framer Motion heavily.
+
+Add:
+- Smooth page transitions
+- Floating motion
+- Ink drawing animations
+- Soft glow effects
+- Mouse parallax
+
+Everything should feel expensive.
+
+9. MAKE IT LOOK LIKE A PRODUCT WORTH $20/MONTH
+
+Inspiration:
+- Arc Browser
+- Linear
+- Notion
+- Obsidian
+- Scrivener
+
+combined with:
+
+- Writer's notebook
+- Fantasy manuscript
+- Worldbuilding journal
+
+10. IMPORTANT
+
+Do NOT create:
+- Gaming UI
+- RPG UI
+- Medieval website
+- Generic SaaS layouts
+
+Create a premium storytelling workspace.
+
+The user should feel inspired to write the moment they land on the page.

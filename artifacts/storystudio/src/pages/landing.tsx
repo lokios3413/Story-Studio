@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Feather, ChevronRight, PenTool, BookOpen, Globe, Clock, Sparkles, MessageSquare } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
+import { Feather, ChevronRight, PenTool, BookOpen, Globe, Clock, Sparkles, MessageSquare, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 
@@ -18,7 +18,7 @@ const features = [
     description: "Structure your world's history, magic systems, and rules in an interconnected web."
   },
   {
-    icon: <UsersIcon className="h-5 w-5 text-primary" />,
+    icon: <Users className="h-5 w-5 text-primary" />,
     title: "Character Builder",
     preview: (
       <div className="flex items-center gap-3 mb-3 p-2 rounded-md bg-background border border-border/50">
@@ -81,29 +81,6 @@ const features = [
   }
 ];
 
-// Need a missing icon import
-function UsersIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-
 const rotatingPhrases = [
   "Create Legends.",
   "Craft Universes.",
@@ -111,10 +88,21 @@ const rotatingPhrases = [
   "Bring Worlds To Life."
 ];
 
+const floatingPages = [
+  { text: "Chapter 3: The Gathering Storm\n\nThe wind howled through the narrow streets of Oakhaven, rattling the shutters...", size: [160, 220], pos: [10, 15], rot: -8, dur: 28 },
+  { text: "[LORE] The Sundering — Year 1024\nWhen the Archmage split the veil between realms, three kingdoms fell overnight...", size: [180, 240], pos: [75, 10], rot: 12, dur: 32 },
+  { text: "CHARACTER: Elaria Vance\nAge: 19 | Role: Protagonist\nFears: Becoming her mother\nGoal: Master the Silver Flame", size: [140, 190], pos: [80, 50], rot: -15, dur: 25 },
+  { text: "Timeline Fragment\n∙ Year 1024 — The Sundering\n∙ Year 1031 — Academy Founded\n∙ Year 1042 — Elaria Born", size: [150, 200], pos: [5, 60], rot: 5, dur: 29 },
+  { text: "Chapter 7: Convergence\n\n'You've always known,' the old mage said without turning. 'You just weren't ready to believe it yet.'", size: [190, 250], pos: [20, 80], rot: -10, dur: 34 },
+  { text: "[WORLD] The Astral Kingdoms\nSilver Keep — capital of the Northern Reach\nPopulation: ~40,000\nRuler: High Regent Velan", size: [160, 210], pos: [65, 85], rot: 14, dur: 27 },
+  { text: "MAGIC SYSTEM NOTES\n∙ Flame-binding: requires emotional anchor\n∙ Cannot be self-taught\n∙ Three known schools...", size: [130, 180], pos: [40, 5], rot: 8, dur: 24 },
+  { text: "Story Beats — Act 2\n∙ Elaria discovers the vault\n∙ Confrontation with Velan\n∙ The betrayal at Silver Keep", size: [170, 230], pos: [90, 30], rot: -6, dur: 31 },
+];
+
 export default function Landing() {
   const [currentPhrase, setCurrentPhrase] = useState(0);
-  const { scrollY } = useScroll();
-  const mockupY = useTransform(scrollY, [0, 1000], [40, -40]);
+  const containerRef = useRef(null);
+  const isGraphInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -123,44 +111,64 @@ export default function Landing() {
     return () => clearInterval(interval);
   }, []);
 
-  // Generate particles
-  const particles = Array.from({ length: 25 }).map((_, i) => ({
-    id: i,
-    x: Math.random() * 100, // vw
-    y: Math.random() * 100, // vh
-    duration: 15 + Math.random() * 10,
-    delay: Math.random() * 5,
-  }));
-
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans overflow-x-hidden relative">
       {/* Immersive Background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Subtle radial gradient */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/[0.04] rounded-full blur-[120px]"></div>
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Radial gradient */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/[0.04] rounded-full blur-[120px]"></div>
         
-        {/* Faint grid overlay */}
+        {/* Subtle dot grid */}
         <div 
           className="absolute inset-0 opacity-[0.03]" 
-          style={{ backgroundImage: 'linear-gradient(to right, hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '40px 40px' }}
+          style={{ backgroundImage: 'radial-gradient(circle at center, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '32px 32px' }}
         ></div>
         
-        {/* Floating particles */}
-        {particles.map((p) => (
+        {/* Floating Pages */}
+        {floatingPages.map((page, i) => (
           <motion.div
-            key={p.id}
-            className="absolute w-1 h-1 rounded-full bg-primary/30"
-            style={{ left: `${p.x}vw`, top: `${p.y}vh` }}
+            key={`page-${i}`}
+            className="absolute border border-foreground/10 bg-foreground/[0.03] backdrop-blur-[1px] rounded-[2px] shadow-sm flex flex-col p-4 overflow-hidden"
+            style={{ 
+              width: page.size[0], 
+              height: page.size[1],
+              left: `${page.pos[0]}vw`,
+              top: `${page.pos[1]}vh`,
+            }}
             animate={{
               y: [0, -30, 0],
-              x: [0, 20, 0],
-              opacity: [0.1, 0.4, 0.1]
+              x: [0, 15, 0],
+              rotate: [page.rot, page.rot + 5, page.rot],
             }}
             transition={{
-              duration: p.duration,
+              duration: page.dur,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: p.delay
+              delay: i * -2
+            }}
+          >
+            <p className="text-[8px] md:text-[9px] font-serif italic leading-relaxed text-foreground/60 whitespace-pre-wrap">
+              {page.text}
+            </p>
+          </motion.div>
+        ))}
+
+        {/* Ink stains */}
+        {[
+          { w: 150, h: 120, pos: [15, 25], br: "60% 40% 70% 30% / 50% 60% 40% 70%" },
+          { w: 200, h: 180, pos: [75, 45], br: "40% 60% 30% 70% / 60% 50% 70% 40%" },
+          { w: 120, h: 160, pos: [10, 75], br: "50% 50% 70% 30% / 30% 70% 40% 60%" },
+          { w: 180, h: 140, pos: [85, 80], br: "70% 30% 50% 50% / 60% 40% 60% 40%" }
+        ].map((stain, i) => (
+          <div
+            key={`stain-${i}`}
+            className="absolute bg-primary/[0.02]"
+            style={{
+              width: stain.w,
+              height: stain.h,
+              left: `${stain.pos[0]}vw`,
+              top: `${stain.pos[1]}vh`,
+              borderRadius: stain.br
             }}
           />
         ))}
@@ -185,15 +193,15 @@ export default function Landing() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 max-w-5xl mx-auto w-full flex flex-col items-center text-center z-10">
+      <section className="relative pt-36 pb-24 px-6 max-w-5xl mx-auto w-full flex flex-col items-center text-center z-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sidebar border border-border/50 text-muted-foreground text-sm font-medium mb-8 shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sidebar/50 border border-border/30 text-muted-foreground text-sm font-medium mb-8 shadow-sm backdrop-blur-md"
         >
           <Sparkles className="h-4 w-4 text-primary" />
-          <span>The next generation writing platform</span>
+          <span className="tracking-wide">The next generation writing platform</span>
         </motion.div>
         
         <div className="h-[120px] md:h-[180px] mb-6 flex flex-col items-center justify-center">
@@ -201,11 +209,11 @@ export default function Landing() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight"
+            className="text-6xl md:text-8xl font-bold tracking-tighter leading-tight text-white"
           >
             Build Worlds.
           </motion.h1>
-          <div className="h-16 md:h-24 relative w-full flex justify-center overflow-visible">
+          <div className="h-20 md:h-28 relative w-full flex justify-center overflow-visible mt-2">
             <AnimatePresence mode="wait">
               <motion.h1
                 key={currentPhrase}
@@ -213,7 +221,7 @@ export default function Landing() {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -20, filter: "blur(4px)" }}
                 transition={{ duration: 0.5 }}
-                className="absolute text-5xl md:text-7xl font-bold tracking-tighter leading-tight text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-secondary"
+                className="absolute text-6xl md:text-8xl font-bold tracking-tighter leading-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary"
               >
                 {rotatingPhrases[currentPhrase]}
               </motion.h1>
@@ -225,7 +233,7 @@ export default function Landing() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-10 leading-relaxed font-light"
+          className="text-xl md:text-2xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-light"
         >
           Turn a simple idea into a complete book. A premium workspace for serious writers to build worlds, characters, and manuscripts.
         </motion.p>
@@ -234,7 +242,7 @@ export default function Landing() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+          className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-20"
         >
           <Link href="/sign-up">
             <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-8 text-base group shadow-xl shadow-primary/20" data-testid="button-get-started-hero">
@@ -248,70 +256,97 @@ export default function Landing() {
           </Link>
         </motion.div>
 
-        {/* Real HTML App Preview Mockup */}
+        {/* Connected Universe Visualization */}
         <motion.div 
-          style={{ y: mockupY }}
-          initial={{ opacity: 0, y: 80 }}
-          animate={{ opacity: 1, y: 40 }}
+          ref={containerRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-          className="mt-24 w-full relative group"
+          className="w-full max-w-[600px] h-[360px] relative rounded-2xl bg-card border border-border/60 shadow-2xl flex items-center justify-center overflow-hidden"
+          style={{ boxShadow: "0 0 40px hsl(var(--primary)/0.1)" }}
         >
-          <div className="absolute -inset-1 bg-gradient-to-b from-primary/20 to-transparent rounded-2xl blur-lg opacity-50 group-hover:opacity-70 transition-opacity"></div>
-          <div className="w-full rounded-xl border border-border/50 bg-background shadow-2xl overflow-hidden relative z-10 flex flex-col h-[400px] md:h-[600px] text-left">
-            {/* Top Bar */}
-            <div className="h-12 border-b border-border bg-sidebar flex items-center px-4 gap-4 shrink-0">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-muted-foreground/30"></div>
-                <div className="w-3 h-3 rounded-full bg-muted-foreground/30"></div>
-                <div className="w-3 h-3 rounded-full bg-muted-foreground/30"></div>
-              </div>
-              <div className="flex-1 flex justify-center items-center text-xs text-muted-foreground gap-2">
-                <span className="opacity-50">StoryStudio</span> <span className="opacity-30">/</span> <span>Dragon Academy</span> <span className="opacity-30">/</span> <span className="text-foreground">Manuscript</span>
-              </div>
-            </div>
-            
-            <div className="flex-1 flex min-h-0">
-              {/* Sidebar */}
-              <div className="w-48 border-r border-border bg-sidebar/50 hidden md:flex flex-col py-4 px-2 gap-1">
-                <div className="px-3 py-2 text-xs font-semibold text-foreground/80 mb-2 truncate">Dragon Academy</div>
-                <div className="px-3 py-1.5 rounded-md text-xs text-muted-foreground flex items-center gap-2"><BookOpen className="w-3.5 h-3.5" /> Lore</div>
-                <div className="px-3 py-1.5 rounded-md text-xs text-muted-foreground flex items-center gap-2"><UsersIcon className="w-3.5 h-3.5" /> Characters</div>
-                <div className="px-3 py-1.5 rounded-md text-xs text-primary bg-primary/10 font-medium flex items-center gap-2"><PenTool className="w-3.5 h-3.5" /> Manuscript</div>
-              </div>
+          {/* SVG Connecting Lines */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 360">
+            {[
+              { id: 1, x2: 120, y2: 100 },
+              { id: 2, x2: 300, y2: 60 },
+              { id: 3, x2: 480, y2: 100 },
+              { id: 4, x2: 120, y2: 260 },
+              { id: 5, x2: 300, y2: 300 },
+              { id: 6, x2: 480, y2: 260 }
+            ].map((line, i) => (
+              <motion.line
+                key={`line-${line.id}`}
+                x1={300}
+                y1={180}
+                x2={line.x2}
+                y2={line.y2}
+                stroke="hsl(var(--primary))"
+                strokeOpacity={0.3}
+                strokeWidth={1}
+                fill="none"
+                strokeDasharray="4 4"
+                initial={{ pathLength: 0 }}
+                animate={isGraphInView ? { pathLength: 1 } : { pathLength: 0 }}
+                transition={{ duration: 1.5, delay: 0.2 + (i * 0.1), ease: "easeOut" }}
+              />
+            ))}
+          </svg>
 
-              {/* AI Panel */}
-              <div className="w-64 border-r border-border bg-background hidden lg:flex flex-col p-4 gap-4">
-                <div className="text-xs font-medium text-foreground flex items-center gap-2 mb-2"><Sparkles className="w-3.5 h-3.5 text-primary" /> AI Assistant</div>
-                <div className="bg-sidebar border border-border rounded-lg p-3 text-xs text-muted-foreground">
-                  <p className="mb-2">How can I help you with chapter 3?</p>
-                  <div className="flex flex-col gap-2 mt-3 border-t border-border/50 pt-2">
-                    <span className="px-2 py-1 rounded bg-background border border-border/50 cursor-pointer hover:bg-card">Brainstorm conflicts</span>
-                    <span className="px-2 py-1 rounded bg-background border border-border/50 cursor-pointer hover:bg-card">Analyze pacing</span>
-                  </div>
-                </div>
-                <div className="bg-primary/10 text-primary rounded-lg p-3 text-xs self-end max-w-[90%] rounded-tr-none">
-                  What was the name of the innkeeper in Oakhaven?
-                </div>
-                <div className="bg-sidebar border border-border rounded-lg p-3 text-xs text-muted-foreground self-start max-w-[90%] rounded-tl-none mt-1">
-                  According to your Lore database, the innkeeper of The Rusty Tankard in Oakhaven is <strong>Bramm</strong>.
-                </div>
-              </div>
+          {/* Central Node */}
+          <motion.div 
+            className="absolute z-20 w-24 h-24 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-lg shadow-primary/20"
+            style={{ left: '50%', top: '50%', marginLeft: '-48px', marginTop: '-48px' }}
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            Your Story
+          </motion.div>
 
-              {/* Editor */}
-              <div className="flex-1 p-8 md:p-12 overflow-hidden flex flex-col">
-                <div className="text-2xl font-serif font-semibold mb-6">Chapter 3: The Gathering Storm</div>
-                <div className="space-y-4 text-sm md:text-base text-muted-foreground font-serif leading-relaxed">
-                  <p>The wind howled through the narrow streets of Oakhaven, rattling the shutters of The Rusty Tankard. Inside, the hearth fire cast dancing shadows across the worn floorboards.</p>
-                  <p>Elaria pulled her cloak tighter around her shoulders, the thick wool doing little to ward off the encroaching chill. She kept her eyes fixed on the man in the corner—the one who hadn't touched his ale since he sat down.</p>
-                  <p className="text-foreground">"You're late," a voice murmured close to her ear.</p>
-                  <div className="inline-flex w-1 h-5 bg-primary animate-pulse relative top-1"></div>
-                </div>
+          {/* Satellite Nodes */}
+          {[
+            { id: 1, label: "Characters", pos: { left: 120, top: 100 }, subs: "Elaria • Lord Velan", delay: 0 },
+            { id: 2, label: "World", pos: { left: 300, top: 60 }, subs: "Silver Keep • Oakhaven", delay: 1 },
+            { id: 3, label: "Lore", pos: { left: 480, top: 100 }, subs: "The Sundering", delay: 2 },
+            { id: 4, label: "Timeline", pos: { left: 120, top: 260 }, subs: "Year 1024 • Year 1042", delay: 3 },
+            { id: 5, label: "Manuscript", pos: { left: 300, top: 300 }, subs: "Chapter 1 • Act 2", delay: 4 },
+            { id: 6, label: "AI Writer", pos: { left: 480, top: 260 }, subs: "Brainstorm • Rewrite", delay: 5 }
+          ].map((node) => (
+            <motion.div
+              key={`node-${node.id}`}
+              className="absolute z-10 flex flex-col items-center"
+              style={{ left: node.pos.left, top: node.pos.top, marginLeft: '-40px', marginTop: '-20px' }}
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: node.delay }}
+            >
+              <div className="w-12 h-12 rounded-full bg-card border border-border/80 flex items-center justify-center text-[10px] font-medium text-foreground shadow-sm">
+                {node.label}
               </div>
-            </div>
-            
-            {/* Bottom Gradient Fade */}
-            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+              <div className="mt-2 text-[9px] text-muted-foreground/60 whitespace-nowrap text-center opacity-50">
+                {node.subs}
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Bottom Fade */}
+          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-30"></div>
+        </motion.div>
+
+        {/* Social Proof */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="mt-12 flex flex-col items-center gap-3"
+        >
+          <div className="flex -space-x-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="w-8 h-8 rounded-full bg-sidebar border-2 border-background flex items-center justify-center text-[10px] font-bold text-muted-foreground shadow-sm">
+                {['JD', 'EV', 'MR', 'AL', 'SK'][i-1]}
+              </div>
+            ))}
           </div>
+          <p className="text-sm text-muted-foreground/80 font-medium">Trusted by 12,000+ writers</p>
         </motion.div>
       </section>
 
@@ -319,7 +354,6 @@ export default function Landing() {
       <section className="py-24 px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Connecting line on desktop */}
             <div className="hidden md:block absolute top-1/2 left-1/6 right-1/6 h-[1px] bg-border/50 border-t border-dashed border-border -z-10 transform -translate-y-1/2"></div>
             
             {[
@@ -350,16 +384,16 @@ export default function Landing() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-6 border-t border-border/30 bg-sidebar/30 relative z-10">
+      <section className="py-32 px-6 border-t border-border/30 bg-sidebar/20 relative z-10">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Everything a novelist needs</h2>
+          <div className="text-center mb-24">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tighter text-foreground">Everything a novelist needs</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg md:text-xl font-light">
               No more scattered notes or endless browser tabs. StoryStudio brings your entire creative universe into one focused, beautiful workspace.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, idx) => (
               <motion.div 
                 key={idx}
@@ -367,18 +401,19 @@ export default function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="p-6 rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group flex flex-col"
+                className="p-8 rounded-2xl border border-border bg-card/60 backdrop-blur-sm hover:-translate-y-1 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 group flex flex-col relative overflow-hidden"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm relative z-10">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
+                <h3 className="text-2xl font-semibold mb-4 tracking-tight relative z-10">{feature.title}</h3>
                 
-                <div className="mb-4 flex-1">
+                <div className="mb-6 flex-1 relative z-10">
                   {feature.preview}
                 </div>
                 
-                <p className="text-sm text-muted-foreground leading-relaxed pt-4 border-t border-border/50">
+                <p className="text-sm text-muted-foreground leading-relaxed pt-6 border-t border-border/50 relative z-10">
                   {feature.description}
                 </p>
               </motion.div>
@@ -387,9 +422,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Enhanced Testimonial Section */}
+      {/* Testimonial Section */}
       <section className="py-32 px-6 border-t border-border/30 relative z-10 overflow-hidden">
-        {/* Decorative background glow for quotes */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div className="max-w-4xl mx-auto text-center relative">
@@ -400,7 +434,7 @@ export default function Landing() {
             transition={{ duration: 0.8 }}
             className="flex flex-col items-center"
           >
-            <div className="text-[120px] leading-none font-serif text-primary/20 absolute -top-16 left-10 md:left-20 select-none">"</div>
+            <div className="text-[120px] leading-none font-serif text-primary/10 absolute -top-16 left-10 md:left-20 select-none">"</div>
             
             <div className="flex gap-1 mb-8 text-primary/80">
               {[1,2,3,4,5].map(i => (
@@ -424,105 +458,41 @@ export default function Landing() {
               </div>
             </div>
           </motion.div>
-
-          {/* Secondary Testimonials */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left border-t border-border/50 pt-16">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="p-6 rounded-2xl bg-sidebar/50 border border-border/50"
-            >
-              <div className="flex gap-1 mb-4 text-primary/60">
-                {[1,2,3,4,5].map(i => <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>)}
-              </div>
-              <p className="text-sm text-muted-foreground mb-6 italic">"Finally, a tool that understands how worldbuilding actually works. The timeline feature alone saved me weeks of continuity checking."</p>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-background flex items-center justify-center border border-border"><span className="text-xs font-bold">MR</span></div>
-                <div className="text-xs"><span className="font-semibold block text-foreground">Marcus Reed</span><span className="text-muted-foreground">Sci-Fi Writer</span></div>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: 0.2 }}
-              className="p-6 rounded-2xl bg-sidebar/50 border border-border/50"
-            >
-              <div className="flex gap-1 mb-4 text-primary/60">
-                {[1,2,3,4,5].map(i => <svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>)}
-              </div>
-              <p className="text-sm text-muted-foreground mb-6 italic">"The interface gets out of your way when you just want to write, but all the deep lore context is just a click away."</p>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-background flex items-center justify-center border border-border"><span className="text-xs font-bold">SC</span></div>
-                <div className="text-xs"><span className="font-semibold block text-foreground">Sarah Chen</span><span className="text-muted-foreground">Game Writer</span></div>
-              </div>
-            </motion.div>
-          </div>
-
-          <div className="mt-16 flex flex-col items-center justify-center">
-            <div className="flex -space-x-2 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-8 h-8 rounded-full bg-sidebar border-2 border-background flex items-center justify-center text-[10px] font-bold text-muted-foreground">
-                  {String.fromCharCode(65 + i)}{String.fromCharCode(90 - i)}
-                </div>
-              ))}
-            </div>
-            <p className="text-sm font-medium text-foreground/80">Trusted by 12,000+ writers worldwide</p>
-          </div>
         </div>
       </section>
 
-      {/* CTA Banner Section */}
-      <section className="py-20 px-6 relative z-10 border-t border-border/30">
-        <div className="absolute inset-0 bg-sidebar/80 -z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5 -z-10"></div>
-        
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
-          >
-            Your next chapter begins here.
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-xl text-muted-foreground mb-10 font-light"
-          >
-            Join thousands of writers building their worlds in StoryStudio.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <Link href="/sign-up">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-10 text-lg shadow-xl shadow-primary/20 group">
-                Start Writing for Free
-                <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </motion.div>
+      {/* CTA Banner */}
+      <section className="py-24 px-6 border-t border-border/30 bg-sidebar relative z-10 overflow-hidden">
+        <div className="absolute right-0 top-0 w-1/2 h-full bg-primary/5 blur-[100px] pointer-events-none"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Your next chapter awaits.</h2>
+          <p className="text-xl text-muted-foreground mb-10 font-light max-w-2xl mx-auto">
+            Join thousands of authors who have upgraded their writing workflow. Start building your universe today.
+          </p>
+          <Link href="/sign-up">
+            <Button size="lg" className="h-14 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/20">
+              Start Writing Now
+            </Button>
+          </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-border/30 bg-background text-center md:text-left flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto w-full gap-4 relative z-10">
-        <div className="flex items-center gap-2">
-          <Feather className="h-5 w-5 text-muted-foreground" />
-          <span className="text-muted-foreground font-medium text-sm">© {new Date().getFullYear()} StoryStudio.</span>
-        </div>
-        <div className="flex gap-6 text-sm text-muted-foreground">
-          <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-          <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-          <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+      <footer className="py-12 px-6 border-t border-border bg-background z-10 relative">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2">
+            <Feather className="h-5 w-5 text-primary" />
+            <span className="font-semibold">StoryStudio</span>
+          </div>
+          <div className="text-sm text-muted-foreground flex gap-6">
+            <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
+            <a href="#" className="hover:text-foreground transition-colors">Discord</a>
+            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            © 2024 StoryStudio. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>

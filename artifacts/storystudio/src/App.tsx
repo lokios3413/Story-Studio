@@ -10,6 +10,7 @@ import SignUp from "@/pages/sign-up";
 import SignIn from "@/pages/sign-in";
 import Dashboard from "@/pages/dashboard";
 import BookWorkspace from "@/pages/book-workspace";
+import { CustomCursor } from "@/components/custom-cursor";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <CustomCursor />
           <Router />
         </WouterRouter>
         <Toaster />

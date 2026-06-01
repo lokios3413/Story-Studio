@@ -7,6 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 
+const floatingPages = [
+  { text: "Chapter 3: The Gathering Storm\n\nThe wind howled through the narrow streets of Oakhaven, rattling the shutters...", size: [180, 240], pos: [15, 10], rot: -8, dur: 32 },
+  { text: "[LORE] The Sundering — Year 1024\nWhen the Archmage split the veil between realms, three kingdoms fell overnight...", size: [200, 260], pos: [65, 15], rot: 12, dur: 38 },
+  { text: "CHARACTER: Elaria Vance\nAge: 19 | Role: Protagonist\nFears: Becoming her mother\nGoal: Master the Silver Flame", size: [160, 210], pos: [5, 45], rot: -15, dur: 28 },
+  { text: "Chapter 7: Convergence\n\n'You've always known,' the old mage said without turning. 'You just weren't ready to believe it yet.'", size: [210, 280], pos: [55, 55], rot: -10, dur: 42 },
+  { text: "Story Beats — Act 2\n∙ Elaria discovers the vault\n∙ Confrontation with Velan\n∙ The betrayal at Silver Keep", size: [170, 230], pos: [25, 70], rot: 6, dur: 35 },
+];
+
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,85 +28,106 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex bg-background text-foreground">
-      {/* Left Panel - Branding */}
+      {/* Left Panel - Living Manuscript Atmosphere */}
       <div className="hidden lg:flex flex-1 flex-col justify-between bg-sidebar p-12 border-r border-border relative overflow-hidden">
-        <div className="relative z-10">
+        
+        {/* Background Atmosphere Layers */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          {/* Radial Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/[0.06] rounded-full blur-[150px]"></div>
+          
+          {/* Subtle parchment noise */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]" 
+            style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, hsl(var(--primary)) 1px, transparent 1px), radial-gradient(circle at 80% 70%, hsl(var(--secondary)) 1px, transparent 1px)', backgroundSize: '64px 64px' }}
+          ></div>
+
+          {/* Layer 1: Dense Floating Pages */}
+          {floatingPages.map((page, i) => (
+            <motion.div
+              key={`page-${i}`}
+              className="absolute border border-foreground/10 bg-foreground/[0.05] backdrop-blur-[2px] rounded-[3px] shadow-md flex flex-col p-5 overflow-hidden z-10"
+              style={{ 
+                width: page.size[0], 
+                height: page.size[1],
+                left: `${page.pos[0]}%`,
+                top: `${page.pos[1]}%`,
+                opacity: 0.12
+              }}
+              animate={{
+                y: [0, -20, 0],
+                x: [0, 10, 0],
+                rotate: [page.rot, page.rot + 3, page.rot],
+              }}
+              transition={{
+                duration: page.dur,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * -3
+              }}
+            >
+              <p className="text-[10px] font-serif italic leading-relaxed text-foreground/80 whitespace-pre-wrap">
+                {page.text}
+              </p>
+            </motion.div>
+          ))}
+
+          {/* Layer 2: Floating quote fragments */}
+          <motion.div className="absolute top-[20%] right-[10%] font-serif text-sm text-foreground/20 italic z-10 w-64" animate={{ x: [0, -10, 0], y: [0, 15, 0] }} transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}>
+            "She had mapped seventeen kingdoms and named a thousand stars, but had never once thought to map her own heart."
+          </motion.div>
+          <motion.div className="absolute top-[60%] left-[10%] font-serif text-sm text-foreground/20 italic z-10 w-64" animate={{ x: [0, 15, 0], y: [0, -10, 0] }} transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 2 }}>
+            "The contract was written in ash and signed in firelight."
+          </motion.div>
+          <motion.div className="absolute top-[80%] right-[20%] font-serif text-sm text-foreground/20 italic z-10 w-64" animate={{ x: [0, -5, 0], y: [0, -15, 0] }} transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 5 }}>
+            "Every good villain believes they are the hero."
+          </motion.div>
+
+          {/* Layer 3: Ink blob decorations */}
+          <div className="absolute bg-primary/[0.06] w-[250px] h-[200px] top-[-5%] right-[-5%] z-0" style={{ borderRadius: "60% 40% 70% 30% / 50% 60% 40% 70%" }}></div>
+          <div className="absolute bg-primary/[0.05] w-[300px] h-[250px] bottom-[-10%] left-[-10%] z-0" style={{ borderRadius: "40% 60% 30% 70% / 60% 50% 70% 40%" }}></div>
+
+          {/* Layer 4: Character Note Cards */}
+          <motion.div 
+            className="absolute bottom-[10%] left-[20%] w-[200px] bg-card border border-border/40 rounded-sm p-4 shadow-xl z-20"
+            animate={{ y: [0, -10, 0], rotate: [-4, -2, -4] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="text-[10px] font-bold font-sans uppercase mb-1 text-foreground/80">Elaria Vance</div>
+            <div className="text-[9px] text-muted-foreground font-sans mb-3">Protagonist</div>
+            <div className="text-[11px] font-serif italic text-foreground/90 leading-relaxed">
+              Trauma from mother's betrayal drives risk-taking behavior.
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="absolute bottom-[20%] right-[15%] w-[180px] bg-card border border-border/40 rounded-sm p-4 shadow-xl z-20"
+            animate={{ y: [0, 15, 0], rotate: [6, 8, 6] }}
+            transition={{ duration: 21, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          >
+            <div className="text-[10px] font-bold font-sans uppercase mb-1 text-foreground/80">Lord Veran</div>
+            <div className="text-[9px] text-muted-foreground font-sans mb-3">Antagonist</div>
+            <div className="text-[11px] font-serif italic text-foreground/90 leading-relaxed">
+              Believes order &gt; freedom. Convinced he's saving the world.
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Layer 5: Brand Content (Foreground) */}
+        <div className="relative z-30">
           <Link href="/" className="flex items-center gap-2 mb-16 inline-flex">
-            <Feather className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold tracking-tight">StoryStudio</span>
+            <Feather className="h-8 w-8 text-primary drop-shadow-md" />
+            <span className="text-2xl font-bold tracking-tight text-white drop-shadow-md">StoryStudio</span>
           </Link>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl font-bold mb-4">Create Legends.</h1>
-            <p className="text-xl text-muted-foreground max-w-md leading-relaxed">
+            <h1 className="text-4xl font-bold mb-4 text-white drop-shadow-lg tracking-tight">Create Legends.</h1>
+            <p className="text-xl text-foreground/90 max-w-md leading-relaxed drop-shadow-md font-medium">
               Join thousands of writers building immersive worlds and crafting their next masterpiece.
             </p>
-          </motion.div>
-        </div>
-        
-        {/* Animated Manuscript Aesthetic */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Subtle overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-background/80 to-transparent z-0"></div>
-          
-          {/* Large decorative quote */}
-          <motion.div 
-            className="absolute top-1/4 right-1/4 text-[20rem] font-serif text-primary/10 leading-none select-none z-0"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.1, scale: 1 }}
-            transition={{ duration: 2, ease: "easeOut" }}
-          >
-            "
-          </motion.div>
-
-          {/* Drifting text fragments */}
-          <motion.div
-            className="absolute top-1/3 left-1/4 font-serif text-lg text-foreground/15 italic whitespace-nowrap"
-            animate={{ x: [0, -20, 0], y: [0, 10, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          >
-            A world born of starlight and shadow...
-          </motion.div>
-          <motion.div
-            className="absolute top-2/3 right-1/4 font-serif text-lg text-foreground/15 italic whitespace-nowrap"
-            animate={{ x: [0, 20, 0], y: [0, -10, 0] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          >
-            The map was torn, but the path was clear.
-          </motion.div>
-          <motion.div
-            className="absolute bottom-1/4 left-1/3 font-serif text-lg text-foreground/15 italic whitespace-nowrap"
-            animate={{ x: [0, -15, 0], y: [0, -15, 0] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-          >
-            Prologue: The Forgotten Crown
-          </motion.div>
-
-          {/* Floating page fragments */}
-          <motion.div
-            className="absolute top-1/4 right-12 w-32 h-40 border border-foreground/10 rounded-sm flex flex-col gap-2 p-3 bg-foreground/[0.02] backdrop-blur-sm"
-            animate={{ rotate: [5, 10, 5], y: [0, -10, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
-            <div className="w-5/6 h-1 bg-foreground/10 rounded-full"></div>
-            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
-            <div className="w-4/5 h-1 bg-foreground/10 rounded-full mt-2"></div>
-            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
-          </motion.div>
-
-          <motion.div
-            className="absolute bottom-1/3 left-12 w-24 h-32 border border-foreground/10 rounded-sm flex flex-col gap-2 p-3 bg-foreground/[0.02] backdrop-blur-sm"
-            animate={{ rotate: [-8, -4, -8], y: [0, 15, 0] }}
-            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          >
-            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
-            <div className="w-3/4 h-1 bg-foreground/10 rounded-full"></div>
-            <div className="w-5/6 h-1 bg-foreground/10 rounded-full mt-2"></div>
-            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
           </motion.div>
         </div>
       </div>
