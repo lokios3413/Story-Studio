@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Feather, Mail, Lock, User } from "lucide-react";
+import { Feather, Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { SiGoogle } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,9 +39,68 @@ export default function SignUp() {
           </motion.div>
         </div>
         
-        {/* Abstract decor */}
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-primary/20 rounded-full blur-[100px] pointer-events-none"></div>
-        <div className="absolute top-1/4 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] pointer-events-none"></div>
+        {/* Animated Manuscript Aesthetic */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Subtle overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-background/80 to-transparent z-0"></div>
+          
+          {/* Large decorative quote */}
+          <motion.div 
+            className="absolute top-1/4 right-1/4 text-[20rem] font-serif text-primary/10 leading-none select-none z-0"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.1, scale: 1 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+          >
+            "
+          </motion.div>
+
+          {/* Drifting text fragments */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 font-serif text-lg text-foreground/15 italic whitespace-nowrap"
+            animate={{ x: [0, -20, 0], y: [0, 10, 0] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          >
+            A world born of starlight and shadow...
+          </motion.div>
+          <motion.div
+            className="absolute top-2/3 right-1/4 font-serif text-lg text-foreground/15 italic whitespace-nowrap"
+            animate={{ x: [0, 20, 0], y: [0, -10, 0] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          >
+            The map was torn, but the path was clear.
+          </motion.div>
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 font-serif text-lg text-foreground/15 italic whitespace-nowrap"
+            animate={{ x: [0, -15, 0], y: [0, -15, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+          >
+            Prologue: The Forgotten Crown
+          </motion.div>
+
+          {/* Floating page fragments */}
+          <motion.div
+            className="absolute top-1/4 right-12 w-32 h-40 border border-foreground/10 rounded-sm flex flex-col gap-2 p-3 bg-foreground/[0.02] backdrop-blur-sm"
+            animate={{ rotate: [5, 10, 5], y: [0, -10, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
+            <div className="w-5/6 h-1 bg-foreground/10 rounded-full"></div>
+            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
+            <div className="w-4/5 h-1 bg-foreground/10 rounded-full mt-2"></div>
+            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-1/3 left-12 w-24 h-32 border border-foreground/10 rounded-sm flex flex-col gap-2 p-3 bg-foreground/[0.02] backdrop-blur-sm"
+            animate={{ rotate: [-8, -4, -8], y: [0, 15, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          >
+            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
+            <div className="w-3/4 h-1 bg-foreground/10 rounded-full"></div>
+            <div className="w-5/6 h-1 bg-foreground/10 rounded-full mt-2"></div>
+            <div className="w-full h-1 bg-foreground/10 rounded-full"></div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Right Panel - Form */}
@@ -49,6 +108,33 @@ export default function SignUp() {
         <Link href="/" className="lg:hidden flex items-center gap-2 mb-8 absolute top-6 left-6">
           <Feather className="h-6 w-6 text-primary" />
           <span className="text-xl font-bold tracking-tight">StoryStudio</span>
+        </Link>
+
+        {/* Back to Home Button - Always Visible */}
+        <Link href="/">
+          <Button 
+            variant="ghost" 
+            className="absolute top-6 left-6 text-muted-foreground hover:text-foreground group z-10 hidden lg:flex items-center gap-2"
+            tabIndex={0}
+            aria-label="Back to Home"
+            data-testid="button-back-home"
+          >
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Button>
+        </Link>
+        
+        <Link href="/">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="absolute top-6 right-6 text-muted-foreground hover:text-foreground group z-10 lg:hidden"
+            tabIndex={0}
+            aria-label="Back to Home"
+            data-testid="button-back-home-mobile"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+          </Button>
         </Link>
 
         <motion.div 
