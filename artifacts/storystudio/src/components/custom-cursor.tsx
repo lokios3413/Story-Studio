@@ -20,7 +20,7 @@ export function CustomCursor() {
     
     if (prefersReducedMotion || isTouchDevice) return;
 
-    document.body.style.cursor = "none";
+    document.body.classList.add("ss-cursor-hidden");
 
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
@@ -70,7 +70,7 @@ export function CustomCursor() {
     window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      document.body.style.cursor = "";
+      document.body.classList.remove("ss-cursor-hidden");
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleMouseDown);

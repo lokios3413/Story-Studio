@@ -88,15 +88,17 @@ const rotatingPhrases = [
   "Bring Worlds To Life."
 ];
 
+// Pages are deliberately constrained to the left/right edges (0-18vw and 78-96vw)
+// to avoid overlapping the centered hero text and buttons
 const floatingPages = [
-  { text: "Chapter 3: The Gathering Storm\n\nThe wind howled through the narrow streets of Oakhaven, rattling the shutters...", size: [160, 220], pos: [10, 15], rot: -8, dur: 28 },
-  { text: "[LORE] The Sundering — Year 1024\nWhen the Archmage split the veil between realms, three kingdoms fell overnight...", size: [180, 240], pos: [75, 10], rot: 12, dur: 32 },
-  { text: "CHARACTER: Elaria Vance\nAge: 19 | Role: Protagonist\nFears: Becoming her mother\nGoal: Master the Silver Flame", size: [140, 190], pos: [80, 50], rot: -15, dur: 25 },
-  { text: "Timeline Fragment\n∙ Year 1024 — The Sundering\n∙ Year 1031 — Academy Founded\n∙ Year 1042 — Elaria Born", size: [150, 200], pos: [5, 60], rot: 5, dur: 29 },
-  { text: "Chapter 7: Convergence\n\n'You've always known,' the old mage said without turning. 'You just weren't ready to believe it yet.'", size: [190, 250], pos: [20, 80], rot: -10, dur: 34 },
-  { text: "[WORLD] The Astral Kingdoms\nSilver Keep — capital of the Northern Reach\nPopulation: ~40,000\nRuler: High Regent Velan", size: [160, 210], pos: [65, 85], rot: 14, dur: 27 },
-  { text: "MAGIC SYSTEM NOTES\n∙ Flame-binding: requires emotional anchor\n∙ Cannot be self-taught\n∙ Three known schools...", size: [130, 180], pos: [40, 5], rot: 8, dur: 24 },
-  { text: "Story Beats — Act 2\n∙ Elaria discovers the vault\n∙ Confrontation with Velan\n∙ The betrayal at Silver Keep", size: [170, 230], pos: [90, 30], rot: -6, dur: 31 },
+  { text: "Chapter 3: The Gathering Storm\n\nThe wind howled through the narrow streets of Oakhaven, rattling the shutters...", size: [150, 200], pos: [1, 18], rot: -8, dur: 28 },
+  { text: "[LORE] The Sundering — Year 1024\nWhen the Archmage split the veil between realms, three kingdoms fell overnight...", size: [160, 220], pos: [81, 8], rot: 10, dur: 32 },
+  { text: "CHARACTER: Elaria Vance\nAge: 19 | Role: Protagonist\nFears: Becoming her mother\nGoal: Master the Silver Flame", size: [140, 185], pos: [84, 50], rot: -13, dur: 25 },
+  { text: "Timeline Fragment\n∙ Year 1024 — The Sundering\n∙ Year 1031 — Academy Founded\n∙ Year 1042 — Elaria Born", size: [145, 195], pos: [2, 58], rot: 6, dur: 29 },
+  { text: "Chapter 7: Convergence\n\n'You've always known,' the old mage said without turning. 'You just weren't ready to believe it yet.'", size: [155, 210], pos: [3, 82], rot: -9, dur: 34 },
+  { text: "[WORLD] The Astral Kingdoms\nSilver Keep — capital of the Northern Reach\nPopulation: ~40,000\nRuler: High Regent Velan", size: [150, 200], pos: [79, 78], rot: 12, dur: 27 },
+  { text: "MAGIC SYSTEM NOTES\n∙ Flame-binding: requires emotional anchor\n∙ Cannot be self-taught\n∙ Three known schools...", size: [130, 175], pos: [0, 3], rot: 7, dur: 24 },
+  { text: "Story Beats — Act 2\n∙ Elaria discovers the vault\n∙ Confrontation with Velan\n∙ The betrayal at Silver Keep", size: [155, 210], pos: [88, 28], rot: -5, dur: 31 },
 ];
 
 export default function Landing() {
