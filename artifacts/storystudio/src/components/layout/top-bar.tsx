@@ -1,5 +1,5 @@
 import { Feather, Search, Bell, LogOut, Settings, Sliders } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -10,8 +10,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/auth";
 
 export function TopBar() {
+  const { user, signOut } = useAuth();
+  const [, setLocation] = useLocation();
+
+  const handleLogout = async () => {
+    await signOut();
+    setLocation("/sign-in");
+  };
+
+  // Get user's initials for avatar
+  const getInitials = () => {
+    const name = user?.user_metadata?.full_name || user?.email || "User";
+    if (typeof name === "string") {
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return "U";
+  };
+
   return (
     <header className="h-16 border-b border-border bg-background flex items-center justify-between px-6 shrink-0 sticky top-0 z-20">
       <div className="flex items-center gap-6">
@@ -36,15 +59,21 @@ export function TopBar() {
           <DropdownMenuTrigger asChild>
             <button className="outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full" data-testid="button-profile-menu">
               <Avatar className="h-8 w-8 border border-border cursor-pointer hover:opacity-90 transition-opacity">
-                <AvatarFallback className="bg-primary/20 text-primary text-xs font-medium">AX</AvatarFallback>
+                <AvatarFallback className="bg-primary/20 text-primary text-xs font-medium">
+                  {getInitials()}
+                </AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Alex Johnson</p>
-                <p className="text-xs leading-none text-muted-foreground">alex@example.com</p>
+                <p className="text-sm font-medium leading-none">
+                  {user?.user_metadata?.full_name || "User"}
+                </p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user?.email || ""}
+                </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -57,7 +86,11 @@ export function TopBar() {
               <span>Preferences</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem data-testid="menuitem-logout" className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
+            <DropdownMenuItem 
+              data-testid="menuitem-logout" 
+              className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+              onClick={handleLogout}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

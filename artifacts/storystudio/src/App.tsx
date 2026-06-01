@@ -8,9 +8,11 @@ import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import SignUp from "@/pages/sign-up";
 import SignIn from "@/pages/sign-in";
-import Dashboard from "@/pages/dashboard";
+import ComingSoon from "@/pages/coming-soon";
 import BookWorkspace from "@/pages/book-workspace";
 import { CustomCursor } from "@/components/custom-cursor";
+import { AuthProvider } from "@/contexts/auth";
+import { ProtectedRoute } from "@/components/protected-route";
 
 const queryClient = new QueryClient();
 
@@ -20,8 +22,20 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/sign-up" component={SignUp} />
       <Route path="/sign-in" component={SignIn} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/book/:id" component={BookWorkspace} />
+      <Route path="/dashboard">
+        {() => (
+          <ProtectedRoute>
+            <ComingSoon />
+          </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/book/:id">
+        {(params) => (
+          <ProtectedRoute>
+            <BookWorkspace params={params} />
+          </ProtectedRoute>
+        )}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
@@ -34,13 +48,15 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <CustomCursor />
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <CustomCursor />
+            <Router />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

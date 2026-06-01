@@ -5,7 +5,8 @@ import {
   Globe, Clock, Sparkles, MessageSquare, Users, Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/contexts/auth";
 
 /* ─── Feature cards ──────────────────────────────────────────────────── */
 const features = [
@@ -132,6 +133,16 @@ const rotatingPhrases = [
 
 /* ─── Main component ─────────────────────────────────────────────────── */
 export default function Landing() {
+  const [, setLocation] = useLocation();
+  const { user, loading } = useAuth();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!loading && user) {
+      setLocation("/dashboard");
+    }
+  }, [user, loading, setLocation]);
+
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [rainOn, setRainOn] = useState(false);

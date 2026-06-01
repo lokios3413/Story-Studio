@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { Feather, Mail, Lock, User, ArrowLeft } from "lucide-react";
-import { SiGoogle } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/auth";
+import { useToast } from "@/hooks/use-toast";
 
 const floatingPages = [
   { text: "Chapter 3: The Gathering Storm\n\nThe wind howled through the narrow streets of Oakhaven, rattling the shutters...", size: [180, 240], pos: [15, 10], rot: -8, dur: 32 },
@@ -16,14 +17,74 @@ const floatingPages = [
 ];
 
 export default function SignUp() {
+  const [, setLocation] = useLocation();
+  const { signUp, loading, user } = useAuth();
+  const { toast } = useToast();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (user) {
+      setLocation("/dashboard");
+    }
+  }, [user, setLocation]);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!name.trim()) {
+      newErrors.name = "Full name is required";
+    }
+
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // UI only
+    setErrors({});
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      await signUp(email, password, name);
+      toast({
+        title: "Account created!",
+        description: "Check your email to verify your account.",
+      });
+      setLocation("/sign-in");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to create account";
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -187,10 +248,19 @@ export default function SignUp() {
                   placeholder="Elena Vance" 
                   className="pl-10 bg-card border-border"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errors.name) {
+                      setErrors({ ...errors, name: "" });
+                    }
+                  }}
                   data-testid="input-name"
+                  disabled={loading}
                 />
               </div>
+              {errors.name && (
+                <p className="text-sm text-destructive">{errors.name}</p>
+              )}
             </div>
             
             <div className="space-y-2">
@@ -203,10 +273,19 @@ export default function SignUp() {
                   placeholder="elena@example.com" 
                   className="pl-10 bg-card border-border"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) {
+                      setErrors({ ...errors, email: "" });
+                    }
+                  }}
                   data-testid="input-email"
+                  disabled={loading}
                 />
               </div>
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -219,10 +298,19 @@ export default function SignUp() {
                   placeholder="••••••••" 
                   className="pl-10 bg-card border-border"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) {
+                      setErrors({ ...errors, password: "" });
+                    }
+                  }}
                   data-testid="input-password"
+                  disabled={loading}
                 />
               </div>
+              {errors.password && (
+                <p className="text-sm text-destructive">{errors.password}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -235,30 +323,25 @@ export default function SignUp() {
                   placeholder="••••••••" 
                   className="pl-10 bg-card border-border"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (errors.confirmPassword) {
+                      setErrors({ ...errors, confirmPassword: "" });
+                    }
+                  }}
                   data-testid="input-confirm-password"
+                  disabled={loading}
                 />
               </div>
+              {errors.confirmPassword && (
+                <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+              )}
             </div>
 
-            <Button type="submit" className="w-full mt-6 h-11" data-testid="button-create-account">
-              Create Account
+            <Button type="submit" className="w-full mt-6 h-11" data-testid="button-create-account" disabled={loading}>
+              {loading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border"></span>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-
-          <Button variant="outline" type="button" className="w-full h-11 bg-transparent border-border hover:bg-muted" data-testid="button-google-signup">
-            <SiGoogle className="mr-2 h-4 w-4" />
-            Google
-          </Button>
 
           <p className="text-center text-sm text-muted-foreground mt-8">
             Already have an account?{" "}

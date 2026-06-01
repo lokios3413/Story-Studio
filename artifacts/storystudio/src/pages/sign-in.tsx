@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Feather, Mail, Lock, ArrowLeft } from "lucide-react";
-import { SiGoogle } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/auth";
+import { useToast } from "@/hooks/use-toast";
 
 const floatingPages = [
   { text: "Chapter 3: The Gathering Storm\n\nThe wind howled through the narrow streets of Oakhaven, rattling the shutters...", size: [180, 240], pos: [15, 10], rot: -8, dur: 32 },
@@ -17,12 +18,57 @@ const floatingPages = [
 
 export default function SignIn() {
   const [, setLocation] = useLocation();
+  const { signIn, loading, user } = useAuth();
+  const { toast } = useToast();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (user) {
+      setLocation("/dashboard");
+    }
+  }, [user, setLocation]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLocation("/dashboard");
+    setErrors({});
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      await signIn(email, password);
+      setLocation("/dashboard");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to sign in";
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -187,10 +233,19 @@ export default function SignIn() {
                   placeholder="elena@example.com" 
                   className="pl-10 bg-card border-border"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) {
+                      setErrors({ ...errors, email: "" });
+                    }
+                  }}
                   data-testid="input-email"
+                  disabled={loading}
                 />
               </div>
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -206,30 +261,25 @@ export default function SignIn() {
                   placeholder="••••••••" 
                   className="pl-10 bg-card border-border"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) {
+                      setErrors({ ...errors, password: "" });
+                    }
+                  }}
                   data-testid="input-password"
+                  disabled={loading}
                 />
               </div>
+              {errors.password && (
+                <p className="text-sm text-destructive">{errors.password}</p>
+              )}
             </div>
 
-            <Button type="submit" className="w-full mt-6 h-11" data-testid="button-sign-in">
-              Sign In
+            <Button type="submit" className="w-full mt-6 h-11" data-testid="button-sign-in" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border"></span>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-
-          <Button variant="outline" type="button" className="w-full h-11 bg-transparent border-border hover:bg-muted" data-testid="button-google-signin">
-            <SiGoogle className="mr-2 h-4 w-4" />
-            Google
-          </Button>
 
           <p className="text-center text-sm text-muted-foreground mt-8">
             Don't have an account?{" "}
