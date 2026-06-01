@@ -1,0 +1,523 @@
+# StoryStudio MVP - Full Project Specification
+
+Project Name: StoryStudio
+
+Slogan: Create Legends.
+
+## Overview
+
+Build a modern desktop-first AI-powered writing platform called StoryStudio.
+
+The application helps users create books, worlds, characters, lore, timelines, and manuscripts.
+
+This phase is UI/UX ONLY.
+
+Do NOT implement AI, authentication logic, databases, APIs, or Ollama integration yet.
+
+Create a fully navigable frontend prototype.
+
+---
+
+## Technology Stack
+
+Framework:
+
+* Next.js 15
+* TypeScript
+* App Router
+
+Styling:
+
+* Tailwind CSS
+* shadcn/ui
+
+Icons:
+
+* Lucide React
+
+Animations:
+
+* Framer Motion
+
+State Management:
+
+* Zustand (prepare only)
+
+Future Backend:
+
+* Supabase
+* Ollama
+
+Deployment:
+
+* Vercel
+
+---
+
+## Design Language
+
+Inspiration:
+
+* Notion
+* Cursor
+* Linear
+* Obsidian
+* Arc Browser
+
+Style:
+
+* Modern
+* Premium
+* Clean
+* Professional
+
+NOT:
+
+* Fantasy themed
+* Cartoonish
+* Overly colorful
+
+---
+
+## Theme
+
+Dark Mode First
+
+Colors:
+
+Background:
+#0F1117
+
+Sidebar:
+#161A22
+
+Cards:
+#1D2230
+
+Borders:
+#2A3142
+
+Primary Accent:
+#8B5CF6
+
+Secondary Accent:
+#6366F1
+
+Text:
+#FFFFFF
+
+Muted Text:
+#94A3B8
+
+---
+
+## Application Structure
+
+Pages:
+
+/
+
+/sign-up
+
+/sign-in
+
+/dashboard
+
+/book/[id]
+
+---
+
+## Landing Page
+
+Hero Section:
+
+Logo:
+StoryStudio
+
+Tagline:
+Create Legends.
+
+Description:
+Turn a simple idea into a complete book.
+
+Buttons:
+
+Get Started
+
+Sign In
+
+Features Section:
+
+* Lore Builder
+* Character Builder
+* World Builder
+* Timeline Builder
+* AI Writing Studio
+
+Modern premium design.
+
+Desktop optimized.
+
+---
+
+## Sign Up Page
+
+Split screen layout.
+
+Left:
+Branding.
+
+Right:
+Form.
+
+Fields:
+
+Name
+
+Email
+
+Password
+
+Confirm Password
+
+Buttons:
+
+Create Account
+
+Continue With Google
+
+Navigation:
+
+Already have an account?
+Sign In
+
+UI only.
+
+No auth logic.
+
+---
+
+## Sign In Page
+
+Fields:
+
+Email
+
+Password
+
+Buttons:
+
+Sign In
+
+Continue With Google
+
+Link:
+
+Create Account
+
+UI only.
+
+No auth logic.
+
+---
+
+## Dashboard
+
+Top Bar:
+
+StoryStudio Logo
+
+Search Bar
+
+Profile Avatar
+
+Main Area:
+
+Welcome Message
+
+Create New Book Button
+
+Recent Books Section
+
+Book Cards
+
+Example Books:
+
+Dragon Academy
+
+Shadow Empire
+
+The Last Mage
+
+Book card contains:
+
+Title
+
+Genre
+
+Last Updated
+
+Open Button
+
+---
+
+## Create Book Modal
+
+Book Type:
+
+Short Story
+
+Medium Story
+
+Long Story
+
+Series
+
+Fields:
+
+Title
+
+Genre
+
+Description
+
+Button:
+
+Create Book
+
+UI only.
+
+---
+
+## Book Workspace
+
+Three Panel Layout.
+
+Left Sidebar
+
+Center AI Panel
+
+Right Manuscript Panel
+
+Resizable Layout.
+
+Desktop Only.
+
+---
+
+## Sidebar
+
+Navigation:
+
+Book Overview
+
+Lore
+
+Characters
+
+World
+
+Timeline
+
+Manuscript
+
+Settings
+
+Collapsible.
+
+---
+
+## AI Panel
+
+Chat Interface.
+
+Quick Actions:
+
+Write Scene
+
+Continue Chapter
+
+Improve Dialogue
+
+Generate Ideas
+
+Rewrite Scene
+
+Mode Selector:
+
+Author
+
+Co-Writer
+
+Editor
+
+Story Doctor
+
+Character
+
+Input Box.
+
+Mock messages.
+
+No AI functionality.
+
+---
+
+## Manuscript Panel
+
+Google Docs style editor.
+
+Example Chapter Content.
+
+Editable textarea.
+
+Word Count Display.
+
+Chapter Selector.
+
+---
+
+## Lore Page
+
+Sections:
+
+History
+
+Magic System
+
+Politics
+
+Factions
+
+Rules
+
+Buttons:
+
+Expand
+
+Improve
+
+Generate Ideas
+
+---
+
+## Character Page
+
+Character Cards.
+
+Fields:
+
+Name
+
+Age
+
+Appearance
+
+Personality
+
+Goals
+
+Fears
+
+Secrets
+
+Add Character Button.
+
+---
+
+## World Page
+
+Categories:
+
+Kingdoms
+
+Cities
+
+Schools
+
+Dungeons
+
+Creatures
+
+Locations
+
+Card Layout.
+
+---
+
+## Timeline Page
+
+Vertical Timeline Design.
+
+Example Events:
+
+First Dragon War
+
+Academy Founded
+
+Dark Rift Opens
+
+Story Begins
+
+---
+
+## Settings Page
+
+Profile
+
+Theme
+
+Account
+
+Preferences
+
+Placeholder Sections.
+
+---
+
+## Components
+
+Create reusable components:
+
+Button
+
+Card
+
+Modal
+
+Sidebar
+
+Navbar
+
+BookCard
+
+CharacterCard
+
+TimelineItem
+
+PageHeader
+
+SearchBar
+
+ThemeToggle
+
+---
+
+## Requirements
+
+* Fully responsive desktop-first design
+* Production-quality UI
+* Clean folder structure
+* Reusable components
+* TypeScript everywhere
+* Modern animations
+* Professional spacing
+* No backend implementation
+* No database integration
+* No Supabase integration
+* No Clerk integration
+* No Ollama integration
+
+Goal:
+
+Build a complete frontend prototype of StoryStudio that looks like a real SaaS product ready for backend integration.
