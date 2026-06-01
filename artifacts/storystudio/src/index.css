@@ -144,3 +144,13 @@ body.ss-cursor-hidden,
 body.ss-cursor-hidden * {
   cursor: none !important;
 }
+
+/* Extra accent tokens — nostalgic · chill · sci-fi */
+:root,
+.dark {
+  --cyan:   189 94% 43%;   /* electric teal  — sci-fi      */
+  --amber:  38  92% 50%;   /* warm gold       — nostalgic   */
+  --rose:   292 84% 72%;   /* soft magenta    — chill       */
+  --mint:   160 60% 55%;   /* cool sage       — chill       */
+  --indigo-soft: 248 70% 70%; /* dreamy indigo — nostalgic  */
+}

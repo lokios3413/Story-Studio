@@ -117,14 +117,21 @@ export default function Landing() {
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans overflow-x-hidden relative">
       {/* Immersive Background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Radial gradient */}
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/[0.04] rounded-full blur-[120px]"></div>
-        
+        {/* Multi-color radial glows — violet + cyan + rose */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full blur-[130px]"
+          style={{ background: "hsl(262,83%,58%,0.05)" }} />
+        <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full blur-[100px]"
+          style={{ background: "hsl(189,94%,43%,0.04)" }} />
+        <div className="absolute top-[30%] right-[3%] w-[350px] h-[350px] rounded-full blur-[90px]"
+          style={{ background: "hsl(292,84%,72%,0.04)" }} />
+        <div className="absolute bottom-[10%] left-[30%] w-[500px] h-[500px] rounded-full blur-[120px]"
+          style={{ background: "hsl(38,92%,50%,0.03)" }} />
+
         {/* Subtle dot grid */}
         <div 
           className="absolute inset-0 opacity-[0.03]" 
           style={{ backgroundImage: 'radial-gradient(circle at center, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '32px 32px' }}
-        ></div>
+        />
         
         {/* Floating Pages */}
         {floatingPages.map((page, i) => (
@@ -206,31 +213,36 @@ export default function Landing() {
           <span className="tracking-wide">The next generation writing platform</span>
         </motion.div>
         
-        <div className="h-[120px] md:h-[180px] mb-6 flex flex-col items-center justify-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-6xl md:text-8xl font-bold tracking-tighter leading-tight text-white"
-          >
-            Build Worlds.
-          </motion.h1>
-          <div className="h-20 md:h-28 relative w-full flex justify-center overflow-visible mt-2">
-            <AnimatePresence mode="wait">
-              <motion.h1
-                key={currentPhrase}
-                initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -20, filter: "blur(4px)" }}
-                transition={{ duration: 0.5 }}
-                className="absolute text-6xl md:text-8xl font-bold tracking-tighter leading-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary"
-              >
-                {rotatingPhrases[currentPhrase]}
-              </motion.h1>
-            </AnimatePresence>
-          </div>
+        {/* Static first line */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight text-white mb-2"
+        >
+          Build Worlds.
+        </motion.h1>
+
+        {/* Rotating second line — clipped so it never bleeds into content below */}
+        <div className="h-16 md:h-20 w-full flex justify-center items-center overflow-hidden mb-10">
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={currentPhrase}
+              initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -24, filter: "blur(6px)" }}
+              transition={{ duration: 0.45 }}
+              className="text-5xl md:text-7xl font-bold tracking-tighter leading-tight text-transparent bg-clip-text"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, hsl(189,94%,43%), hsl(262,83%,68%), hsl(292,84%,72%))",
+              }}
+            >
+              {rotatingPhrases[currentPhrase]}
+            </motion.h1>
+          </AnimatePresence>
         </div>
-        
+
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
